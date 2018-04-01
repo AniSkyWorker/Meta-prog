@@ -43,7 +43,7 @@ BOOST_AUTO_TEST_CASE(can_find_element_in_string_range_when_range_const_rvalue)
     BOOST_CHECK_EQUAL(*foundElem, searched);
 }
 
-BOOST_AUTO_TEST_CASE(can_find_element_in_string_range_when_range_lvalue)
+BOOST_AUTO_TEST_CASE(can_find_element_in_range_when_range_store_lvalue)
 {
     SomeStruct first{ 1 };
     SomeStruct second{ 2 };
@@ -60,7 +60,7 @@ BOOST_AUTO_TEST_CASE(can_find_element_in_string_range_when_range_lvalue)
     BOOST_CHECK_EQUAL((*foundElem)->num, searchedStruct.num);
 }
 
-BOOST_AUTO_TEST_CASE(can_find_element_in_string_range_when_predicate_move_capture_lambda)
+BOOST_AUTO_TEST_CASE(can_find_element_in_range_when_predicate_move_capture_lambda)
 {
     struct SomeStruct {
         int num;
