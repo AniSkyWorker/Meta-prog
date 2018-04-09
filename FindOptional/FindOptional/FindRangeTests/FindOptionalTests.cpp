@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <string>
 #include "../FindOptional/FindOptional.h"
 
 struct SomeStruct
@@ -7,6 +8,19 @@ struct SomeStruct
 };
 
 BOOST_AUTO_TEST_SUITE(find_optional_tests)
+
+BOOST_AUTO_TEST_CASE(can_find_element_in_int_array)
+{
+    const auto searched = 10;
+    int numArray[] = { 1, 4, 6, 10, 11 };
+    auto foundElem = range_find::FindOptional(numArray, [searched = searched](const auto& element) {
+        return element == searched;
+    });
+
+    BOOST_CHECK(foundElem);
+    BOOST_CHECK_EQUAL(*foundElem, searched);
+}
+
 BOOST_AUTO_TEST_CASE(can_find_element_in_int_range)
 {
     const auto searched = 10;
@@ -79,5 +93,16 @@ BOOST_AUTO_TEST_CASE(can_find_element_in_range_when_predicate_move_capture_lambd
 
     BOOST_CHECK(foundElem);
     BOOST_CHECK_EQUAL((*foundElem)->num, searchedStruct.num);
+}
+
+BOOST_AUTO_TEST_CASE(can_find_element_in_range_when_predicate_range_class_method)
+{
+    using namespace std::string_literals;
+
+    std::vector<std::string> strings = { ""s, "a"s, "bcd"s };
+    auto emptyOpt = range_find::FindOptional(strings, &std::string::empty);
+
+    BOOST_CHECK(emptyOpt);
+    BOOST_CHECK_EQUAL(*emptyOpt, strings[0]);
 }
 BOOST_AUTO_TEST_SUITE_END()
