@@ -11,7 +11,6 @@ public:
     virtual ~FunctionInterface() = default;
 
     virtual ReturnType operator()(Args&&...) const = 0;
-    virtual ReturnType operator()(Args&&...) = 0;
 };
 
 template<typename Func, typename ReturnType, typename ...Args>
@@ -24,11 +23,6 @@ public:
     }
 
     ReturnType operator()(Args&& ...args) const override
-    {
-        return std::invoke(m_fn, std::forward<Args>(args)...);
-    }
-
-    ReturnType operator()(Args&& ...args) override
     {
         return std::invoke(m_fn, std::forward<Args>(args)...);
     }
@@ -48,22 +42,21 @@ public:
 
     template<class Func>
     MovableFunction(Func&& fn)
-        : m_pImpl(std::make_unique<FunctionImpl>(std::forward<Func>(fn), ReturnType, Args...))
+        : m_pImpl(std::make_unique<FunctionImpl<Func, ReturnType, Args...>>(std::forward<Func>(fn)))
     {}
 
-    template<class...Args>
-    ReturnType operator()(Args&&...args)
-    {
-        return std::invoke(*m_pImpl, std::forward<Args>(args)...);
-    }
-
-    template<class...Args>
     ReturnType operator()(Args&&...args) const
     {
-        return std::invoke(*m_pImpl, std::forward<Args>(args)...);
+        if (m_pImpl)
+        {
+            return std::invoke(*m_pImpl, std::forward<Args>(args)...);
+        }
+
+        throw std::bad_function_call();
+
     }
 
 private:
-    std::unique_ptr<FunctionImpl<ReturnType, Args...>> m_pImpl;
+    std::unique_ptr<FunctionInterface<ReturnType, Args...>> m_pImpl;
 };
 }
