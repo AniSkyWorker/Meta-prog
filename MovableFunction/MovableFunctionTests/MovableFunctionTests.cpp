@@ -1,7 +1,7 @@
 #include "stdafx.h"
-#include "../MovableFunction/MovableFunction.h"
+#include "../MovableFunctionWithOptimization/MovableFunctionSmallBuffer.h"
 
-using movable_function::MovableFunction;
+using movable_function::optimization::MovableFunction;
 
 namespace test_functors
 {
